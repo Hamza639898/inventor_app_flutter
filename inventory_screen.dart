@@ -52,3 +52,34 @@ class _InventoryScreenState extends State<InventoryScreen> {
       ),
     );
   }
+
+ void _showForm({Map<String, dynamic>? item}) {
+    final nameController = TextEditingController(text: item?['name']);
+    final quantityController = TextEditingController(text: item?['quantity']?.toString());
+    final priceController = TextEditingController(text: item?['price']?.toString());
+    final dateController = TextEditingController(text: item?['date']);
+    final deliverToController = TextEditingController(text: item?['deliverTo']);
+    final inController = TextEditingController(text: item?['in']?.toString());
+    final outController = TextEditingController(text: item?['out']?.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(item == null ? 'Create New Item' : 'Edit Item'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: quantityController,
+                decoration: const InputDecoration(labelText: 'Quantity'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: priceController,
+                decoration: const InputDecoration(labelText: 'Price'),
+                keyboardType: TextInputType.number,
+              ),
