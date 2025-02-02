@@ -119,3 +119,110 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ],
           ),
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final name = nameController.text;
+              final quantity = int.tryParse(quantityController.text) ?? 0;
+              final price = double.tryParse(priceController.text) ?? 0.0;
+              final date = dateController.text;
+              final deliverTo = deliverToController.text;
+              final inValue = int.tryParse(inController.text) ?? 0;
+              final outValue = int.tryParse(outController.text) ?? 0;
+
+              if (name.isEmpty || date.isEmpty || deliverTo.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please fill all fields')),
+                );
+                return;
+              }
+
+              if (item == null) {
+                await DBHelper().addItem(name, quantity, price, date, deliverTo, inValue, outValue);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Item added successfully')),
+                );
+              } else {
+                await DBHelper().updateItem(item['id'], name, quantity, price, date, deliverTo, inValue, outValue);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Item updated successfully')),
+                );
+              }
+
+              _refreshInventory();
+              Navigator.pop(context);
+            },
+            child: Text(item == null ? 'Save' : 'Update'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _filterItems() {
+    if (_searchQuery.isEmpty) return _inventoryItems;
+    return _inventoryItems.where((item) {
+      final name = item['name']?.toLowerCase() ?? "";
+      final id = item['id'].toString();
+      return name.contains(_searchQuery.toLowerCase()) || id.contains(_searchQuery);
+    }).toList();
+  }
+
+  Widget _buildDataTable() {
+    final filteredItems = _filterItems();
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        columnSpacing: 12,
+        headingRowColor: MaterialStateProperty.all(Colors.grey[200]),
+        columns: const [
+          DataColumn(label: Text('S.NO.')),
+          DataColumn(label: Text('Name')),
+          DataColumn(label: Text('Quantity')),
+          DataColumn(label: Text('Price')),
+          DataColumn(label: Text('Date')),
+          DataColumn(label: Text('Deliver To')),
+          DataColumn(label: Text('In')),
+          DataColumn(label: Text('Out')),
+          DataColumn(label: Text('Actions')),
+        ],
+        rows: filteredItems.asMap().entries.map((entry) {
+          int index = entry.key + 1;
+          Map<String, dynamic> item = entry.value;
+          return DataRow(
+            cells: [
+              DataCell(Text(index.toString())),
+              DataCell(Text(item['name'] ?? 'N/A')),
+              DataCell(Text(item['quantity'].toString())),
+              DataCell(Text(item['price'].toString())),
+              DataCell(Text(item['date'] ?? 'N/A')),
+              DataCell(Text(item['deliverTo'] ?? 'N/A')),
+              DataCell(Text(item['in'].toString())),
+              DataCell(Text(item['out'].toString())),
+              DataCell(
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () => _showForm(item: item),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _showDeleteConfirmationDialog(item['id']),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+ 
