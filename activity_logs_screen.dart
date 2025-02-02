@@ -191,15 +191,7 @@ class _ActivityLogsScreenState extends State<ActivityLogsScreen> {
                             'By: ${log['username'] ?? 'Unknown'}',
                             style: const TextStyle(color: Colors.grey),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            DateFormat('yyyy-MM-dd hh:mm a').format(
-                              DateTime.parse(log['timestamp']),
-                            ),
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
+                      
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () => _deleteLog(log['id']),
