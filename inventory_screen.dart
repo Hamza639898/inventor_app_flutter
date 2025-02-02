@@ -225,4 +225,48 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
- 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inventory'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Center(
+              child: SizedBox(
+                width: 200,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search by name or ID',
+                    prefixIcon: const Icon(Icons.search),
+                    contentPadding: const EdgeInsets.all(8.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: _inventoryItems.isEmpty
+            ? const Center(child: Text('No items available.'))
+            : _buildDataTable(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showForm(),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
