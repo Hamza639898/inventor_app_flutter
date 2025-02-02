@@ -53,7 +53,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
- void _showForm({Map<String, dynamic>? item}) {
+  void _showForm({Map<String, dynamic>? item}) {
     final nameController = TextEditingController(text: item?['name']);
     final quantityController = TextEditingController(text: item?['quantity']?.toString());
     final priceController = TextEditingController(text: item?['price']?.toString());
@@ -83,3 +83,39 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 decoration: const InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
               ),
+              TextField(
+                controller: dateController,
+                readOnly: true,
+                decoration: const InputDecoration(labelText: 'Date'),
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+
+                  if (pickedDate != null) {
+                    setState(() {
+                      dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+                    });
+                  }
+                },
+              ),
+              TextField(
+                controller: deliverToController,
+                decoration: const InputDecoration(labelText: 'Deliver To'),
+              ),
+              TextField(
+                controller: inController,
+                decoration: const InputDecoration(labelText: 'In'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: outController,
+                decoration: const InputDecoration(labelText: 'Out'),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+        ),
