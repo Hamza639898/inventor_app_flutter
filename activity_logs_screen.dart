@@ -119,7 +119,17 @@ class _ActivityLogsScreenState extends State<ActivityLogsScreen> {
               ),
             ),
           ),
-        
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.date_range),
+                    label: Text(
+                      _startDate == null
+                          ? 'Start Date'
+                          : DateFormat('yyyy-MM-dd').format(_startDate!),
                     ),
                     onPressed: () => _selectStartDate(context),
                   ),
@@ -181,7 +191,15 @@ class _ActivityLogsScreenState extends State<ActivityLogsScreen> {
                             'By: ${log['username'] ?? 'Unknown'}',
                             style: const TextStyle(color: Colors.grey),
                           ),
-                      
+                          const SizedBox(height: 4),
+                          Text(
+                            DateFormat('yyyy-MM-dd hh:mm a').format(
+                              DateTime.parse(log['timestamp']),
+                            ),
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () => _deleteLog(log['id']),
