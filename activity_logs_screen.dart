@@ -119,17 +119,7 @@ class _ActivityLogsScreenState extends State<ActivityLogsScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.date_range),
-                    label: Text(
-                      _startDate == null
-                          ? 'Start Date'
-                          : DateFormat('yyyy-MM-dd').format(_startDate!),
+        
                     ),
                     onPressed: () => _selectStartDate(context),
                   ),
